@@ -78,9 +78,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CSRF_COOKIE_HTTPONLY = True
 ROOT_URLCONF = 'financial_social_media.urls'
-
+CSRF_COOKIE_DOMAIN = '.onrender.com'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
