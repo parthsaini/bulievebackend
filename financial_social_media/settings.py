@@ -26,7 +26,8 @@ load_dotenv()
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 
-
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 
@@ -116,7 +117,9 @@ SIMPLE_JWT = {
 }
 
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://bulievebackend.onrender.com/',
+]
 
 WSGI_APPLICATION = 'financial_social_media.wsgi.application'
 
