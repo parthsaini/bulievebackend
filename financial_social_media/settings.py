@@ -42,7 +42,7 @@ SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bulievebackend.onrender.com']
+# ALLOWED_HOSTS = ['bulievebackend.onrender.com']
 
 AUTH_USER_MODEL = 'users.CustomUser'
 # Application definition
@@ -82,7 +82,7 @@ MIDDLEWARE = [
 
 CSRF_COOKIE_HTTPONLY = True
 ROOT_URLCONF = 'financial_social_media.urls'
-CORS_ALLOW_ALL_ORIGINS = True  # Use only for development or debugging
+# CORS_ALLOW_ALL_ORIGINS = True  # Use only for development or debugging
 
 CSRF_COOKIE_DOMAIN = '.onrender.com'
 TEMPLATES = [
@@ -151,7 +151,10 @@ DATABASES = {
 }
 
 
-
+CORS_ALLOWED_ORIGINS = [
+    "https://bulievebackend.onrender.com",  # Replace with your frontend URL
+         # Add for local development, if needed
+]
 
 
 
