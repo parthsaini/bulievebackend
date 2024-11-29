@@ -69,12 +69,12 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware'
+    
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -122,7 +122,7 @@ SIMPLE_JWT = {
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://bulievebackend.onrender.com/',
+   *
 ]
 
 WSGI_APPLICATION = 'financial_social_media.wsgi.application'
