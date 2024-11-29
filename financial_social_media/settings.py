@@ -156,8 +156,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://bulievebackend.onrender.com",
-    "https://35.160.120.126"
-    "https://44.233.151.27"
+    "https://35.160.120.126",
+    "https://44.233.151.27",
     "https://34.211.200.85"
     
         # Add for local development, if needed
