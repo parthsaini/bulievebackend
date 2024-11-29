@@ -42,7 +42,7 @@ SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['bulievebackend.onrender.com']
+ALLOWED_HOSTS = ['bulievebackend.onrender.com']
 
 AUTH_USER_MODEL = 'users.CustomUser'
 # Application definition
@@ -153,7 +153,7 @@ DATABASES = {
 
 CORS_ALLOWED_ORIGINS = [
     "https://bulievebackend.onrender.com",  # Replace with your frontend URL
-         # Add for local development, if needed
+        # Add for local development, if needed
 ]
 
 
