@@ -42,9 +42,7 @@ SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bulievebackend.onrender.com','35.160.120.126',
-'44.233.151.27',
-'34.211.200.85']
+ALLOWED_HOSTS = ['bulievebackend.onrender.com']
 
 AUTH_USER_MODEL = 'users.CustomUser'
 # Application definition
@@ -124,9 +122,6 @@ SIMPLE_JWT = {
 }
 
 
-# CSRF_TRUSTED_ORIGINS = [
-#   'https://*'
-# ]
 
 WSGI_APPLICATION = 'financial_social_media.wsgi.application'
 
@@ -167,14 +162,7 @@ CORS_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
 
 
 
-CORS_ALLOWED_ORIGINS = [
-    "https://bulievebackend.onrender.com",
-    "https://35.160.120.126",
-    "https://44.233.151.27",
-    "https://34.211.200.85"
-    
-        # Add for local development, if needed
-]
+
 
 
 
