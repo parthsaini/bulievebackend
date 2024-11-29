@@ -84,7 +84,7 @@ CSRF_COOKIE_HTTPONLY = True
 ROOT_URLCONF = 'financial_social_media.urls'
 # CORS_ALLOW_ALL_ORIGINS = True  # Use only for development or debugging
 
-CSRF_COOKIE_DOMAIN = '.onrender.com'
+#CSRF_COOKIE_DOMAIN = '.onrender.com'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
