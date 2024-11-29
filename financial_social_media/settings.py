@@ -122,7 +122,7 @@ SIMPLE_JWT = {
 
 
 CSRF_TRUSTED_ORIGINS = [
-   *
+  '*'
 ]
 
 WSGI_APPLICATION = 'financial_social_media.wsgi.application'
