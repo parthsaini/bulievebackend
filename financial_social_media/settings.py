@@ -73,12 +73,13 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 CSRF_COOKIE_HTTPONLY = True
 ROOT_URLCONF = 'financial_social_media.urls'
 CORS_ALLOW_ALL_ORIGINS = True  # Use only for development or debugging
@@ -121,9 +122,9 @@ SIMPLE_JWT = {
 }
 
 
-CSRF_TRUSTED_ORIGINS = [
-  'https://*'
-]
+# CSRF_TRUSTED_ORIGINS = [
+#   'https://*'
+# ]
 
 WSGI_APPLICATION = 'financial_social_media.wsgi.application'
 
