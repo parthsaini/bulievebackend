@@ -154,6 +154,19 @@ DATABASES = {
 
 CORS_ALLOW_CREDENTIALS = True
 
+
+CSRF_TRUSTED_ORIGINS = [ "https://bulievebackend.onrender.com"]
+CSRF_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
+CORS_ORIGINS_WHITELIST = [ "https://bulievebackend.onrender.com"]
+CORS_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
+
+
+
+
+
+
+
+
 CORS_ALLOWED_ORIGINS = [
     "https://bulievebackend.onrender.com",
     "https://35.160.120.126",
