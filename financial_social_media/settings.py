@@ -42,7 +42,7 @@ SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bulievebackend.onrender.com']
+ALLOWED_HOSTS = ['bulievebackend.onrender.com','127.0.0.1']
 
 AUTH_USER_MODEL = 'users.CustomUser'
 # Application definition
