@@ -1,4 +1,4 @@
-
+from django.db.models import Q 
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
@@ -28,24 +28,114 @@ class CommunityViewSet(viewsets.ModelViewSet):
 
 @extend_schema(tags=['Posts'])
 class PostViewSet(viewsets.ModelViewSet):
+    # queryset = Post.objects.all()
+    # serializer_class = PostSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly, 
+    #     IsPostVisibleToUser]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+    # def get_queryset(self):
+    #     # Filter posts based on visibility
+    #     if self.request.user.is_authenticated:
+    #         return Post.objects.filter(
+    #             Q(visibility='public') | 
+    #             Q(visibility='private', user=self.request.user) |
+    #             Q(visibility='community', community__in=self.request.user.community_set.all())
+    #         )
+    #     return Post.objects.filter(visibility='public')
+
+
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly, 
-       # IsPostVisibleToUser]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, IsPostVisibleToUser]
 
     def get_queryset(self):
-        # Filter posts based on visibility
+        queryset = super().get_queryset()
+        
+        # Filtering parameters
+        community_id = self.request.query_params.get('community_id')
+        username = self.request.query_params.get('username')
+        visibility = self.request.query_params.get('visibility')
+        tag = self.request.query_params.get('tag')
+        
+        # Base visibility filtering for authenticated/non-authenticated users
         if self.request.user.is_authenticated:
-            return Post.objects.filter(
+            queryset = queryset.filter(
                 Q(visibility='public') | 
                 Q(visibility='private', user=self.request.user) |
                 Q(visibility='community', community__in=self.request.user.community_set.all())
             )
-        return Post.objects.filter(visibility='public')
+        else:
+            queryset = queryset.filter(visibility='public')
 
+        # Additional filtering options
+        if community_id:
+            queryset = queryset.filter(community_id=community_id)
+        
+        if username:
+            queryset = queryset.filter(user__username=username)
+        
+        if visibility:
+            queryset = queryset.filter(visibility=visibility)
+        
+        if tag:
+            queryset = queryset.filter(tags__name=tag)
+        
+        return queryset
+
+    @action(detail=False, methods=['GET'])
+    def search(self, request):
+        """
+        Custom search action with multiple filtering options
+        Query params:
+        - q: search term (searches in title and content)
+        - community_id: filter by community
+        - username: filter by user
+        - min_date: minimum creation date
+        - max_date: maximum creation date
+        - tags: comma-separated list of tags
+        """
+        queryset = self.get_queryset()
+        
+        # Search term
+        search_query = request.query_params.get('q','')
+        if search_query:
+            queryset = queryset.filter(
+               # Q(title__icontains=search_query) | 
+                Q(content__icontains=search_query)
+            )
+        
+        # Date range filtering
+        min_date = request.query_params.get('min_date')
+        max_date = request.query_params.get('max_date')
+        
+        if min_date:
+            queryset = queryset.filter(created_at__gte=min_date)
+        
+        if max_date:
+            queryset = queryset.filter(created_at__lte=max_date)
+        
+        # Multiple tag filtering
+        tags = request.query_params.get('tags')
+        if tags:
+            tag_list = tags.split(',')
+            queryset = queryset.filter(tags__name__in=tag_list)
+        
+        # Ordering
+        ordering = request.query_params.get('ordering', '-created_at')
+        queryset = queryset.order_by(ordering)
+        
+        # Pagination
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 @extend_schema(tags=['Comments'])
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
