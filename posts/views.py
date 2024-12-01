@@ -21,7 +21,7 @@ from drf_spectacular.utils import extend_schema
 class CommunityViewSet(viewsets.ModelViewSet):
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
@@ -30,7 +30,7 @@ class CommunityViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly, 
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly, 
         IsPostVisibleToUser]
 
     def perform_create(self, serializer):
@@ -50,7 +50,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -59,7 +59,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 class CommunityMemberViewSet(viewsets.ModelViewSet):
     queryset = CommunityMember.objects.all()
     serializer_class = CommunityMemberSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         # Filter members by community if community_id is provided

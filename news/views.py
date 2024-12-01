@@ -20,7 +20,7 @@ from drf_spectacular.utils import extend_schema
 class NewsArticleViewSet(viewsets.ModelViewSet):
     queryset = NewsArticle.objects.all().order_by('-published_at')
     serializer_class = NewsArticleSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = NewsArticleFilter
     search_fields = ['title', 'content', 'source', 'tags']

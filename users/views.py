@@ -19,7 +19,7 @@ from drf_spectacular.utils import extend_schema
 @extend_schema(tags=['Users'])
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsOwnerOrReadOnly]
+    #permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -56,7 +56,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class UserFinancialProfileViewSet(viewsets.ModelViewSet):
     queryset = UserFinancialProfile.objects.all()
     serializer_class = UserFinancialProfileSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         # Ensure users can only access their own financial profile
