@@ -12,6 +12,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     
+
+    profile_photo = models.ImageField(
+        upload_to='profile_photos/', 
+        null=True, 
+        blank=True, 
+        verbose_name='Profile Photo'
+    )
+
+
+
+
     ACCOUNT_TYPES = [
         ('individual', 'Individual'),
         ('institutional', 'Institutional'),
@@ -27,6 +38,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+
+
+    # def set_password(self, raw_password):
+    #     raise NotImplementedError("Password authentication is disabled")
+
+    # def check_password(self, raw_password):
+    #     raise NotImplementedError("Password authentication is disabled")
 
     def __str__(self):
         return self.email

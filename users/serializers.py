@@ -25,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
             'full_name', 
             'account_type', 
             'date_joined', 
+            'profile_photo',
             'financial_profile'
         ]
         read_only_fields = ['id', 'date_joined']
@@ -42,7 +43,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'full_name', 
             'password', 
             'confirm_password', 
-            'account_type', 
+            'account_type',
+            'profile_photo',
             'financial_profile'
         ]
         extra_kwargs = {
@@ -83,7 +85,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = [
             'full_name', 
-            'account_type', 
+            'account_type',
+            'profile_photo',
             'financial_profile'
         ]
 

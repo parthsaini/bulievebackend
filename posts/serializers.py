@@ -24,9 +24,24 @@ class CommunitySerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'description', 'creator', 
             'creator_id', 'created_at', 'is_private', 
-            'member_count'
+            'member_count','community_photo'
         ]
-        read_only_fields = ['created_at', 'member_count']
+        read_only_fields = ['created_at', 'member_count','is_private']
+        extra_kwargs = {
+            'community_photo': {'required': False}
+        }
+
+    def update(self, instance, validated_data):
+        """
+        Custom update method to handle photo upload
+        """
+        # Remove creator from validated data if present to prevent accidental changes
+        validated_data.pop('creator', None)
+        
+        return super().update(instance, validated_data)
+
+
+
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -61,13 +76,14 @@ class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     comments_count = serializers.SerializerMethodField()
     reactions = serializers.SerializerMethodField()
+    reactions_count = serializers.SerializerMethodField()  # Add this line
     class Meta:
         model = Post
         fields = [
             'id', 'user', 'user_id', 'community', 
             'content', 'media_urls', 'created_at', 
             'updated_at', 'post_type', 'visibility',
-            'comments','comments_count', 'reactions'
+            'comments','comments_count', 'reactions','reactions_count'  # Add reactions_count here
         ]
         read_only_fields = ['created_at', 'updated_at']
     
@@ -78,6 +94,10 @@ class PostSerializer(serializers.ModelSerializer):
         # Get all reactions for this post
         reactions = PostReaction.objects.filter(post=obj)
         return PostReactionSerializer(reactions, many=True).data
+
+    def get_reactions_count(self, obj):
+        # Count the total number of reactions for this post
+        return PostReaction.objects.filter(post=obj).count()
 
 class CommunityMemberSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)

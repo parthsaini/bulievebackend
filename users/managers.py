@@ -22,7 +22,8 @@ class CustomUserManager(BaseUserManager):
             username=username, 
             **extra_fields
         )
-        user.set_password(password)
+        #user.set_password(password)
+        user.set_unusable_password()
         user.save()
         return user
 

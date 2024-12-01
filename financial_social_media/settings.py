@@ -26,8 +26,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
 
 
 
@@ -42,7 +41,13 @@ SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bulievebackend.onrender.com','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.56.1']
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 AUTH_USER_MODEL = 'users.CustomUser'
 # Application definition
@@ -54,7 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'oauth2_provider',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -69,10 +74,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -80,11 +83,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_COOKIE_HTTPONLY = True
 ROOT_URLCONF = 'financial_social_media.urls'
-# CORS_ALLOW_ALL_ORIGINS = True  # Use only for development or debugging
 
-#CSRF_COOKIE_DOMAIN = '.onrender.com'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -105,6 +105,8 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -123,6 +125,7 @@ SIMPLE_JWT = {
 
 
 
+
 WSGI_APPLICATION = 'financial_social_media.wsgi.application'
 
 
@@ -137,7 +140,7 @@ WSGI_APPLICATION = 'financial_social_media.wsgi.application'
 # }
 
 DATABASES = {
-   'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'postgres'),
         'USER': os.getenv('DB_USER', 'postgres.jrpemcooncrdaonctwne'),
@@ -147,17 +150,9 @@ DATABASES = {
     }
 }
 
-CORS_ALLOW_CREDENTIALS = True
 
 
-CSRF_TRUSTED_ORIGINS = [ "https://bulievebackend.onrender.com"]
-CSRF_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
-CORS_ORIGINS_WHITELIST = [ "https://bulievebackend.onrender.com"]
-CORS_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
-
-
-
-
+#user=postgres.jrpemcooncrdaonctwne password=[YOUR-PASSWORD] host=aws-0-ap-south-1.pooler.supabase.com port=6543 dbname=postgres
 
 
 

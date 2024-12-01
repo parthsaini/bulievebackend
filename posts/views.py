@@ -1,7 +1,7 @@
-from django.db.models import Q
+from django.db.models import Q 
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from .models import Community, Post, Comment, CommunityMember
 from .serializers import (
     CommunitySerializer, 
@@ -13,6 +13,7 @@ from .permissions import IsOwnerOrReadOnly, IsPostVisibleToUser
 
 from drf_spectacular.utils import extend_schema
 from django.contrib.auth import get_user_model
+from rest_framework.parsers import MultiPartParser, FormParser
 User = get_user_model()
 
 
@@ -22,10 +23,80 @@ User = get_user_model()
 class CommunityViewSet(viewsets.ModelViewSet):
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
+   #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, FormParser]  # Add support for file uploads
+    
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+    @action(detail=True, methods=['POST'], 
+            parser_classes=[MultiPartParser, FormParser])
+    def upload_photo(self, request, pk=None):
+        """
+        Upload a photo for a specific community
+        """
+        community = self.get_object()
+        
+        # Check if the current user is the creator or an admin
+        is_creator = community.creator == request.user
+        is_admin = CommunityMember.objects.filter(
+            community=community, 
+            user=request.user, 
+            role__in=['admin', 'moderator']
+        ).exists()
+        
+        if not (is_creator or is_admin):
+            return Response(
+                {"error": "You are not authorized to upload a community photo"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Check if photo is in request
+        if 'community_photo' not in request.FILES:
+            return Response(
+                {"error": "No photo uploaded"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Save the photo
+        community.community_photo = request.FILES['community_photo']
+        community.save()
+        
+        # Serialize and return the updated community
+        serializer = self.get_serializer(community)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['DELETE'])
+    def remove_photo(self, request, pk=None):
+        """
+        Remove the community photo
+        """
+        community = self.get_object()
+        
+        # Check if the current user is the creator or an admin
+        is_creator = community.creator == request.user
+        is_admin = CommunityMember.objects.filter(
+            community=community, 
+            user=request.user, 
+            role__in=['admin', 'moderator']
+        ).exists()
+        
+        if not (is_creator or is_admin):
+            return Response(
+                {"error": "You are not authorized to remove the community photo"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Remove the photo
+        if community.community_photo:
+            community.community_photo.delete()
+        
+        community.save()
+        
+        return Response(
+            {"message": "Community photo removed successfully"},
+            status=status.HTTP_200_OK
+        )
 
 @extend_schema(tags=['Posts'])
 class PostViewSet(viewsets.ModelViewSet):
@@ -64,12 +135,14 @@ class PostViewSet(viewsets.ModelViewSet):
         
         # Base visibility filtering for authenticated/non-authenticated users
         if self.request.user.is_authenticated:
+            print (self.request.user)
             queryset = queryset.filter(
                 Q(visibility='public') | 
                 Q(visibility='private', user=self.request.user) |
                 Q(visibility='community', community__in=self.request.user.community_set.all())
             )
         else:
+            print (self.request.user)
             queryset = queryset.filter(visibility='public')
 
         # Additional filtering options
@@ -144,6 +217,7 @@ class PostViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 @extend_schema(tags=['Comments'])
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()

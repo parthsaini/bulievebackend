@@ -12,7 +12,12 @@ class Community(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
     member_count = models.PositiveIntegerField(default=0)
-
+    community_photo = models.ImageField(
+        upload_to='community_photos/', 
+        null=True, 
+        blank=True, 
+        verbose_name='Community Photo'
+    )
 
     def update_member_count(self):
         """

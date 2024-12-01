@@ -9,7 +9,7 @@ from drf_spectacular.utils import extend_schema
 class PostReactionViewSet(viewsets.ModelViewSet):
     queryset = PostReaction.objects.all()
     serializer_class = PostReactionSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         # Filter reactions by post if post_id is provided
