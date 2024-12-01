@@ -22,7 +22,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
-from oauth2_provider import urls as oauth2_urls
+#from oauth2_provider import urls as oauth2_urls
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -38,7 +38,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('o/', include(oauth2_urls)),
+    #path('o/', include(oauth2_urls)),
 ]
 
 

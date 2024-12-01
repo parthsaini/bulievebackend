@@ -25,8 +25,8 @@ load_dotenv()
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-
-
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 
@@ -41,7 +41,7 @@ SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.56.1']
+ALLOWED_HOSTS = ['bulievebackend.onrender.com','127.0.0.1']
 
 
 MEDIA_URL = '/media/'
@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'oauth2_provider',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -76,6 +75,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -122,6 +122,20 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+
+CSRF_COOKIE_HTTPONLY = True
+
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [ "https://bulievebackend.onrender.com"]
+CSRF_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
+CORS_ORIGINS_WHITELIST = [ "https://bulievebackend.onrender.com"]
+CORS_ALLOWED_ORIGINS = [ "https://bulievebackend.onrender.com"]
+
+
+
+
+
 
 
 
