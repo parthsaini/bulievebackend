@@ -1,4 +1,4 @@
-from django.db.models import Q 
+from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
@@ -12,7 +12,8 @@ from .serializers import (
 from .permissions import IsOwnerOrReadOnly, IsPostVisibleToUser
 
 from drf_spectacular.utils import extend_schema
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 
@@ -59,7 +60,7 @@ class PostViewSet(viewsets.ModelViewSet):
         community_id = self.request.query_params.get('community_id')
         username = self.request.query_params.get('username')
         visibility = self.request.query_params.get('visibility')
-        tag = self.request.query_params.get('tag')
+        post_type = self.request.query_params.get('post_type')
         
         # Base visibility filtering for authenticated/non-authenticated users
         if self.request.user.is_authenticated:
@@ -76,13 +77,20 @@ class PostViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(community_id=community_id)
         
         if username:
-            queryset = queryset.filter(user__username=username)
+            
+            try:
+                user = User.objects.get(email=username)
+                queryset = queryset.filter(user=user)
+            except User.DoesNotExist:
+                # Return empty queryset if user not found
+                print ("doesn't exit")
+                return Post.objects.none()
         
         if visibility:
             queryset = queryset.filter(visibility=visibility)
         
-        if tag:
-            queryset = queryset.filter(tags__name=tag)
+        if post_type:
+            queryset = queryset.filter(post_type=post_type)
         
         return queryset
 
@@ -104,7 +112,7 @@ class PostViewSet(viewsets.ModelViewSet):
         search_query = request.query_params.get('q','')
         if search_query:
             queryset = queryset.filter(
-               # Q(title__icontains=search_query) | 
+              
                 Q(content__icontains=search_query)
             )
         
