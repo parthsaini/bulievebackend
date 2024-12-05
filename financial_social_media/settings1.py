@@ -36,7 +36,7 @@ CSRF_COOKIE_SECURE = True
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
+SECRET_KEY = 'django-insecure-7z==vk1^+^#h&m6&t@!$9b6_3zx5v+b*i0^+f^)d%)$@-8$!z)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -156,17 +156,17 @@ WSGI_APPLICATION = 'financial_social_media.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME' ),
-        'USER': os.getenv('DB_USER' ),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST' ),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'postgres.jrpemcooncrdaonctwne'),
+        'PASSWORD': os.getenv('DB_PASSWORD','I@mantibond1'),
+        'HOST': os.getenv('DB_HOST', 'aws-0-ap-south-1.pooler.supabase.com'),
+        'PORT': os.getenv('DB_PORT', '6543'),
     }
 }
 
 
 
-
+#user=postgres.jrpemcooncrdaonctwne password=[YOUR-PASSWORD] host=aws-0-ap-south-1.pooler.supabase.com port=6543 dbname=postgres
 
 
 
