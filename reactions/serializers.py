@@ -5,12 +5,13 @@ class PostReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostReaction
         fields = ['id', 'post', 'user', 'reaction_type', 'created_at']
-        read_only_fields = ['user', 'created_at']
+        read_only_fields = [ 'created_at']
 
     def create(self, validated_data):
         # Automatically set the user to the current authenticated user
-        validated_data['user'] = self.context['request'].user
         
+        user = validated_data.get('user') or self.context['request'].user
+        validated_data['user'] = user
         # Check if user has already reacted to the post
         existing_reaction = PostReaction.objects.filter(
             post=validated_data['post'], 

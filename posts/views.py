@@ -26,8 +26,8 @@ class CommunityViewSet(viewsets.ModelViewSet):
    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, FormParser]  # Add support for file uploads
     
-    def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+    #def perform_create(self, serializer):
+        #serializer.save()
 
     @action(detail=True, methods=['POST'], 
             parser_classes=[MultiPartParser, FormParser])
@@ -65,6 +65,20 @@ class CommunityViewSet(viewsets.ModelViewSet):
         # Serialize and return the updated community
         serializer = self.get_serializer(community)
         return Response(serializer.data)
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+    
+    # Check for is_private filter in query parameters
+        is_private = self.request.query_params.get('is_private')
+    
+    # If is_private is specified, filter accordingly
+        if is_private is not None:
+        # Convert string to boolean
+            is_private = is_private.lower() in ['true', '1', 'yes']
+            queryset = queryset.filter(is_private=is_private)
+    
+        return queryset
 
     @action(detail=True, methods=['DELETE'])
     def remove_photo(self, request, pk=None):
@@ -224,8 +238,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    #def perform_create(self, serializer):
+       # serializer.save(user=self.request.user)
 
 @extend_schema(tags=['Community-Members'])
 class CommunityMemberViewSet(viewsets.ModelViewSet):

@@ -30,7 +30,15 @@ class CommunitySerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'community_photo': {'required': False}
         }
-
+    def create(self, validated_data):
+        # If a creator is provided in the context (typically from frontend), use that
+        creator = validated_data.get('creator') or self.context['request'].user
+        
+        # Update validated_data with the creator
+        validated_data['creator'] = creator
+        
+        # Create the community
+        return Community.objects.create(**validated_data)
     def update(self, instance, validated_data):
         """
         Custom update method to handle photo upload
@@ -65,6 +73,16 @@ class CommentSerializer(serializers.ModelSerializer):
             'content', 'created_at', 'updated_at'
         ]
         read_only_fields = ['created_at', 'updated_at']
+    
+    def create(self, validated_data):
+        # If a user is provided in the context (typically from frontend), use that
+        user = validated_data.get('user') or self.context['request'].user
+        
+        # Update validated_data with the user
+        validated_data['user'] = user
+        
+        # Create the comment
+        return Comment.objects.create(**validated_data)
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -106,11 +124,14 @@ class CommunityMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommunityMember
         fields = ['id', 'community', 'user', 'username', 'community_name', 'role', 'joined_at']
-        read_only_fields = ['user', 'joined_at']
+        read_only_fields = [ 'joined_at']
 
     def create(self, validated_data):
         # Automatically set the user to the current authenticated user
-        validated_data['user'] = self.context['request'].user
+        user = validated_data.get('user') or self.context['request'].user
+        
+        # Update validated_data with the user
+        validated_data['user'] = user
         
         # Increment community member count
         community = validated_data['community']
