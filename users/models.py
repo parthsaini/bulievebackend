@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    id = models.CharField(max_length=50, primary_key=True, unique=True)
     email = models.EmailField(_('email address'), unique=True)
     username = models.CharField(max_length=50, unique=True)
     full_name = models.CharField(max_length=255, blank=True)
@@ -37,7 +38,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'id']
 
 
 
@@ -63,7 +64,7 @@ class UserFinancialProfile(models.Model):
         ('medium', 'Medium'),
         ('high', 'High')
     ]
-
+    id = models.CharField(max_length=50, primary_key=True, unique=True)
     user = models.OneToOneField(
         CustomUser, 
         on_delete=models.CASCADE, 

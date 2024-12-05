@@ -6,13 +6,14 @@ class UserFinancialProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFinancialProfile
         fields = [
+            'id', 
             'investment_experience', 
             'risk_tolerance', 
             'preferred_sectors', 
             'annual_income', 
             'net_worth'
         ]
-
+        read_only_fields = ['id']
 class UserSerializer(serializers.ModelSerializer):
     financial_profile = UserFinancialProfileSerializer(read_only=True)
     
@@ -28,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
             'profile_photo',
             'financial_profile'
         ]
-        read_only_fields = ['id', 'date_joined']
+        read_only_fields = [ 'date_joined']
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
@@ -38,6 +39,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+             'id',
             'email', 
             'username', 
             'full_name', 
@@ -48,7 +50,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'financial_profile'
         ]
         extra_kwargs = {
-            'account_type': {'required': False}
+            'account_type': {'required': False},
+            'id': {'required': True}  #
         }
 
     def validate(self, data):
@@ -71,6 +74,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
         # Create financial profile if data is provided
         if financial_profile_data:
+            financial_profile_data['id'] = user.id
             UserFinancialProfile.objects.create(
                 user=user,
                 **financial_profile_data
@@ -84,12 +88,13 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            'id',  
             'full_name', 
             'account_type',
             'profile_photo',
             'financial_profile'
         ]
-
+        read_only_fields = ['id']  # Prevent ID modification
     def update(self, instance, validated_data):
         # Extract financial profile data if provided
         financial_profile_data = validated_data.pop('financial_profile', None)
@@ -102,7 +107,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         # Update or create financial profile
         if financial_profile_data:
             financial_profile, created = UserFinancialProfile.objects.get_or_create(
-                user=instance
+                user=instance,
+                defaults={'id': instance.id}
             )
             for attr, value in financial_profile_data.items():
                 setattr(financial_profile, attr, value)
