@@ -148,16 +148,16 @@ class PostViewSet(viewsets.ModelViewSet):
         post_type = self.request.query_params.get('post_type')
         
         # Base visibility filtering for authenticated/non-authenticated users
-        if self.request.user.is_authenticated:
-            print (self.request.user)
-            queryset = queryset.filter(
-                Q(visibility='public') | 
-                Q(visibility='private', user=self.request.user) |
-                Q(visibility='community', community__in=self.request.user.community_set.all())
-            )
-        else:
-            print (self.request.user)
-            queryset = queryset.filter(visibility='public')
+        # if self.request.user.is_authenticated:
+            
+        #     queryset = queryset.filter(
+        #         Q(visibility='public') | 
+        #         Q(visibility='private', user=self.request.user) |
+        #         Q(visibility='community', community__in=self.request.user.community_set.all())
+        #     )
+        # else:
+            
+        #     queryset = queryset.filter(visibility='public')
 
         # Additional filtering options
         if community_id:
