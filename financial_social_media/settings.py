@@ -39,7 +39,7 @@ CSRF_COOKIE_SECURE = True
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['bulievebackend.onrender.com','127.0.0.1']
 
